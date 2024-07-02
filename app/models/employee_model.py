@@ -1,13 +1,9 @@
-from flask_mysqldb import MySQL
+from app.extension import db, ma
 
-class Employee :
-    def __init__(self):
-        self.MYSQL = MySQL
+class Employee(db.Model) :
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
 
-    def get_all_employees(self):
-        cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM Employees")
-        employees = cur.fetchall()
-        cur.close()
-
-        return employees
+    def __repr__(self):
+        return f'<Employee {self.name}>'

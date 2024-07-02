@@ -17,3 +17,14 @@ def add_customer():
     db.session.add(new_customer)
     db.session.commit()
     return jsonify({'message': 'Customer added!'}), 201
+
+@customer_bp.route('/delete/customer/<int:id>', methods=['DELETE'])
+def delete_customer(id):
+    customer = Customer.query.get(id)
+    if not customer:
+        return jsonify({'error': 'Customer not found'}), 404
+
+    db.session.delete(customer)
+    db.session.commit()
+    
+    return jsonify({'message': 'Customer deleted successfully'}), 200

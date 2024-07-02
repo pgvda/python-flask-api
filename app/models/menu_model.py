@@ -1,13 +1,9 @@
-from flask_mysqldb import MySQL
+from app.extension import db, ma
 
-class Menu :
-    def __init__(self):
-        self.MYSQL = MySQL
+class Menu(db.Model) :
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    price = db.Column(db.String(12), nullable=False)
 
-    def get_all_menues(self):
-        cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM Menues")
-        menues = cur.fetchall()
-        cur.close()
-
-        return menues
+    def __repr__(self):
+        return f'<Menu {self.name}>'
