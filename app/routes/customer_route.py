@@ -28,3 +28,23 @@ def delete_customer(id):
     db.session.commit()
     
     return jsonify({'message': 'Customer deleted successfully'}), 200
+
+@customer_bp.route('/edit/customer/<int:id>', methods =['PUT'])
+def update_customer(id):
+    customer = Customer.query.get(id)
+    if not customer:
+        return jsonify({'message': 'no such customer found'}), 404
+    
+    
+    data = request.get_json()
+
+    
+    customer.name = data.get('name', customer.name)
+    customer.email = data.get('email', customer.email)
+ 
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Customer updated successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Failed to update customer', 'error': str(e)}), 500

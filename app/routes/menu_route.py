@@ -29,3 +29,25 @@ def delete_menu(id):
     db.session.commit()
     
     return jsonify({'message': 'Menu deleted successfully'}), 200
+
+
+@menu_dp.route('/edit/menu/<int:id>', methods =['PUT'])
+def update_menu(id):
+    menu = Menu.query.get(id)
+    # print("menu is",id)
+    if not menu:
+        return jsonify({'message': 'no such menu found'}), 404
+    
+    
+    data = request.get_json()
+
+
+    menu.name = data.get('name', menu.name)
+    menu.price = data.get('price', menu.price)
+ 
+    try:
+        db.session.commit()
+        return jsonify({'message': 'menu updated successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Failed to update menu', 'error': str(e)}), 500

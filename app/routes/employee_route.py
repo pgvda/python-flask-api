@@ -30,3 +30,23 @@ def delete_employee(id):
     db.session.commit()
     
     return jsonify({'message': 'Employee deleted successfully'}), 200
+
+
+@employee_dp.route('/edit/employee/<int:id>', methods=['PUT'])
+def update_employee(id):
+    print("id",id)
+    employee = Employee.query.get(id)
+    if not employee:
+        return jsonify({'message':'no such employee found'})
+    
+    data = request.get_json()
+
+    employee.name = data.get('name',employee.name)
+    employee.email= data.get('email',employee.email)
+
+    try:
+        db.session.commit()
+        return jsonify({'message':'employee update successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message':'Faild to update employee', 'error': str(e)}), 500
